@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Carrito de Compras</title>
+</head>
+<body>
+    <h1>Carrito de Compras</h1>
+    <ul>
+        {% if cart %}
+            {% for key, item in cart.items %}
+            <li>{{ item.name }} - Cantidad: {{ item.quantity }} - ${{ item.price }}</li>
+            {% endfor %}
+        {% else %}
+        <li>El carrito está vacío.</li>
+        {% endif %}
+    </ul>
+    <a href="{% url 'product_list' %}">Volver a la tienda</a>
+</body>
+</html>

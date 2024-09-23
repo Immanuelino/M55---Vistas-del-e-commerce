@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Productos</title>
+</head>
+<body>
+    <h1>Productos Disponibles</h1>
+    <ul>
+        {% for producto in productos %}
+            <li>
+                {{ producto.nombre }} - ${{ producto.precio }}
+                <form action="{% url 'agregar_al_carrito' producto.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit">Agregar al Carrito</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <h2>Carrito de Compras</h2>
+    <ul>
+        {% for item in carrito.values %}
+            <li>{{ item.nombre }} - Cantidad: {{ item.cantidad }}</li>
+        {% empty %}
+            <li>No hay productos en el carrito.</li>
+        {% endfor %}
+    </ul>
+    <form action="{% url 'procesar_pedido' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Procesar Pedido</button>
+    </form>
+</body>
+</html>

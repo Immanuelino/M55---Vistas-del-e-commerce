@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Checkout</title>
+</head>
+<body>
+    <h1>Checkout</h1>
+
+    <h2>Resumen del Carrito</h2>
+    <ul>
+        {% for key, item in cart.items %}
+        <li>{{ item.name }} - Cantidad: {{ item.quantity }} - ${{ item.price }}</li>
+        {% endfor %}
+    </ul>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Procesar Pago</button>
+    </form>
+
+    <a href="{% url 'cart' %}">Volver al carrito</a>
+
+    <script src="https://js.stripe.com/v3/"></script>
+
+    
+<script>
+    var stripe = Stripe('{{ stripe_publishable_key }}');
+    var elements = stripe.elements();
+    
+    var card = elements.create('card');
+    card.mount('#card-element');
+    
+    var form = document.getElementById('payment-form');
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        stripe.confirmCardPayment("{{ client_secret }}", {
+            payment_method: {
+                card: card
+            }
+        }).then(function(result) {
+            if (result.error) {
+                // Mostrar el error de pago
+                document.getElementById('error-message').textContent = result.error.message;
+            } else {
+                // Redirigir al éxito del pago
+                window.location.href = "/ventas/checkout_success/";
+            }
+        });
+    });
+</script>
+
+
+    
+</body>
+</html>
